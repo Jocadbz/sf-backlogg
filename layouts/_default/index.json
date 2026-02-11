@@ -1,0 +1,6 @@
+{{- $.Scratch.Add "index" slice -}}
+{{- range where .Site.RegularPages "Section" "games" -}}
+    {{- $cover := partial "get-cover.html" . -}}
+    {{- $.Scratch.Add "index" (dict "title" .Title "permalink" .Permalink "cover" $cover "rating" .Params.rating "status" .Params.completion_status) -}}
+{{- end -}}
+{{- $.Scratch.Get "index" | jsonify -}}

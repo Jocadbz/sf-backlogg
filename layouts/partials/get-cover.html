@@ -1,0 +1,5 @@
+{{ $cover := .Params.cover_image }}
+{{ with .Resources.GetMatch "cover.*" }}
+  {{ $cover = .RelPermalink }}
+{{ end }}
+{{ return $cover }}

@@ -1,0 +1,150 @@
+{{ define "main" }}
+
+
+{{ if .Site.Params.favorites }}
+<div class="favorites-section">
+    <div class="section-title-large">Favorite Games</div>
+    <div class="favorites-grid">
+        {{ $favs := .Site.Params.favorites }}
+        {{ $count := len $favs }}
+
+        {{ range $visualIndex := seq 0 4 }}
+            
+            {{ $targetInputIndex := -1 }}
+            {{ if eq $visualIndex 0 }}{{ $targetInputIndex = 1 }}{{ end }}
+            {{ if eq $visualIndex 1 }}{{ $targetInputIndex = 2 }}{{ end }}
+            {{ if eq $visualIndex 2 }}{{ $targetInputIndex = 0 }}{{ end }}
+            {{ if eq $visualIndex 3 }}{{ $targetInputIndex = 3 }}{{ end }}
+            {{ if eq $visualIndex 4 }}{{ $targetInputIndex = 4 }}{{ end }}
+
+            <div style="position: relative;">
+                
+                {{ if lt $targetInputIndex $count }}
+                    
+                    {{ if eq $targetInputIndex 0 }}
+                        <div class="crown-icon">👑</div>
+                    {{ end }}
+
+                    {{ $slug := index $favs $targetInputIndex }}
+                    {{ $gamePage := site.GetPage (printf "/games/%s" $slug) }}
+                    
+                    {{ if $gamePage }}
+                        <a href="{{ $gamePage.Permalink }}" class="game-cover-card" title="{{ $gamePage.Title }}">
+                            <img src="{{ partial "get-cover.html" $gamePage }}" alt="{{ $gamePage.Title }}">
+                        </a>
+                    {{ else }}
+                        
+                        <div class="game-cover-card game-cover-placeholder" title="Game not found: {{ $slug }}">?</div>
+                    {{ end }}
+                {{ else }}
+                    
+                    <div class="game-cover-card game-cover-placeholder"></div>
+                {{ end }}
+            </div>
+        {{ end }}
+    </div>
+</div>
+{{ end }}
+
+
+{{ $reviews := where .Site.RegularPages "Section" "games" }}
+{{ $total_logged := len $reviews }}
+
+{{ $played_count := 0 }}
+{{ range $reviews }}
+    {{ if or (eq .Params.completion_status "Completed") (eq .Params.completion_status "Played") }}
+        {{ $played_count = add $played_count 1 }}
+    {{ end }}
+{{ end }}
+
+{{ $current_year := now.Year }}
+{{ $played_this_year := 0 }}
+{{ range $reviews }}
+    {{ if and (or (eq .Params.completion_status "Completed") (eq .Params.completion_status "Played")) (eq .Date.Year $current_year) }}
+        {{ $played_this_year = add $played_this_year 1 }}
+    {{ end }}
+{{ end }}
+
+<div class="stats-banner">
+    <div class="stat-item">
+        <div class="stat-number">{{ printf "%03d" $played_count }}</div>
+        <div class="stat-label">Total Games Played</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ printf "%03d" $played_this_year }}</div>
+        <div class="stat-label">Played in {{ $current_year }}</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">{{ printf "%03d" $total_logged }}</div>
+        <div class="stat-label">Games Backloggd</div>
+    </div>
+</div>
+
+
+<div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px;">
+        <div class="section-title-large" style="margin-bottom: 0;">Recently Played</div>
+        <a href="/reviews/" style="font-size: 0.85rem; color: var(--text-muted);">View All</a>
+    </div>
+    
+    {{ if eq (len $reviews) 0 }}
+        <div class="no-games-message">No games registered.</div>
+    {{ else }}
+    <div class="recently-played-grid">
+        {{ range first 5 $reviews }}
+        <div class="recent-play-item">
+            <a href="{{ .Permalink }}" class="game-cover-card" title="{{ .Title }}">
+                <img src="{{ partial "get-cover.html" . }}" alt="{{ .Title }}">
+            </a>
+            <div class="play-date">{{ .Date.Format "Jan 02" }}</div>
+            <div class="play-stars">{{ partial "stars.html" .Params.rating }}</div>
+        </div>
+        {{ end }}
+    </div>
+    {{ end }}
+</div>
+
+
+<div style="margin-top: 50px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+        <div class="section-title-large" style="margin-bottom: 0;">Recently Reviewed</div>
+        <a href="/reviews/" style="font-size: 0.85rem; color: var(--text-muted);">View All</a>
+    </div>
+
+    {{ if eq (len $reviews) 0 }}
+        <div class="no-games-message">No games registered.</div>
+    {{ else }}
+    <div class="recent-reviews-list">
+        {{ range first 3 $reviews }}
+        <div class="review-card-row">
+            <a href="{{ .Permalink }}" class="review-cover-small">
+                <img src="{{ partial "get-cover.html" . }}" alt="{{ .Title }}">
+            </a>
+            <div class="review-content">
+                <div class="review-header">
+                    <a href="{{ .Permalink }}" class="game-title">{{ .Title }}</a>
+                    <span class="review-date">{{ .Date.Format "Jan 02, 2006" }}</span>
+                </div>
+                
+                <div class="review-meta-line">
+                    {{ partial "stars.html" .Params.rating }}
+                    <span class="status-dot"></span>
+                    <span style="color: var(--text-main);">{{ .Params.completion_status }}</span>
+                    <span>on {{ .Params.platform }}</span>
+                </div>
+
+                <div class="review-excerpt">
+                    {{ .Summary | truncate 240 }}
+                </div>
+                
+                <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 15px;">
+                    <a href="{{ .Permalink }}" style="color: var(--text-muted);">Open review</a>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+    {{ end }}
+</div>
+
+{{ end }}

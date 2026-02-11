@@ -1,0 +1,51 @@
+{{ define "main" }}
+<div class="single-review-container">
+    
+    <div class="game-poster-col">
+        <img src="{{ partial "get-cover.html" . }}" class="game-poster-large">
+    </div>
+
+    
+    <div class="review-main-col">
+        
+        
+        <div class="review-user-header">
+            <img src="{{ .Site.Params.avatar }}" class="user-avatar-small">
+            <div class="user-action-text">
+                <strong>{{ .Site.Params.author }}</strong> reviewed <a href="{{ .Permalink }}" class="game-link">{{ .Title }}</a>
+            </div>
+        </div>
+
+        
+        <div class="review-metadata-row">
+            <div class="meta-left">
+                <span class="status-badge {{ .Params.completion_status | lower }}">{{ .Params.completion_status }}</span>
+                <span class="meta-text">on <strong>{{ .Params.platform }}</strong></span>
+            </div>
+            <div class="meta-right">
+                 <span class="star-rating-large">{{ partial "stars.html" .Params.rating }}</span>
+            </div>
+        </div>
+
+        
+        <div class="review-body-text">
+            {{ .Content }}
+        </div>
+
+        
+        {{ if .Params.tags }}
+        <div class="tags-row">
+            {{ range .Params.tags }}
+            <a href="{{ "tags/" | relURL }}{{ . | urlize }}" class="tag-pill">{{ . }}</a>
+            {{ end }}
+        </div>
+        {{ end }}
+
+        
+        <div class="review-footer">
+            <div class="footer-meta">Reviewed on {{ .Date.Format "Jan 02, 2006" }}</div>
+        </div>
+
+    </div>
+</div>
+{{ end }}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/main.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            {{ if .Site.Params.colors }}
+                {{ with .Site.Params.colors.background }}--bg-body: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.header }}--bg-header: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.foreground }}--bg-card: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.text }}--text-main: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.text_muted }}--text-muted: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.accent }}--accent-pink: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.accent_secondary }}--accent-blue: {{ . }};{{ end }}
+                {{ with .Site.Params.colors.border }}--border-color: {{ . }};{{ end }}
+            {{ end }}
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="top-nav">
+        <div style="max-width: 1100px; width: 100%; margin: 0 auto; display: flex; align-items: center;">
+            <a href="/" class="nav-brand">{{ .Site.Params.site_name | default "Backloggd" }}</a>
+            <div style="flex-grow:1;"></div>
+            <input type="text" class="search-bar" placeholder="Search...">
+        </div>
+    </nav>
+
+    
+    <div class="page-container">
+        
+        
+        <aside class="sidebar">
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    <img src="{{ .Site.Params.avatar }}" alt="{{ .Site.Params.author }}">
+                </div>
+                <div>
+                    <div class="username">{{ .Site.Params.author }}</div>
+                    <div style="margin-top: 5px; display: flex; gap: 10px; align-items: center;">
+                        <span id="copy-link-btn" style="cursor: pointer; color: var(--text-muted); font-size: 1.2rem;" title="Copy Profile Link">🔗</span>
+                        
+                        {{ range .Site.Params.socials }}
+                        <a href="{{ .url }}" target="_blank" style="font-size: 1.2rem; text-decoration: none;" title="{{ .name }}">
+                            {{ .icon }}
+                        </a>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="bio-section">
+                <div class="section-header">Bio</div>
+                <div class="bio-text">
+                    {{ .Site.Params.bio }}
+                </div>
+            </div>
+
+            
+            <div class="ratings-graph-container">
+                <div class="section-header">Personal Ratings</div>
+                
+                {{ $reviews := where .Site.RegularPages "Section" "games" }}
+                {{ $maxCount := 0 }}
+                
+                
+                {{ range $i := seq 1 10 }}
+                    {{ $val := div (float $i) 2.0 }}
+                    {{ $c := 0 }}
+                    {{ range $reviews }}
+                        {{ if eq (float .Params.rating) $val }}{{ $c = add $c 1 }}{{ end }}
+                    {{ end }}
+                    {{ if gt $c $maxCount }}{{ $maxCount = $c }}{{ end }}
+                {{ end }}
+
+                <div class="ratings-graph">
+                    {{ range $i := seq 1 10 }}
+                        {{ $val := div (float $i) 2.0 }}
+                        {{ $c := 0 }}
+                        {{ range $reviews }}
+                            {{ if eq (float .Params.rating) $val }}{{ $c = add $c 1 }}{{ end }}
+                        {{ end }}
+                        
+                        {{ $h := 2.0 }} 
+                        {{ if gt $maxCount 0 }}
+                            {{ $h = mul (div (float $c) $maxCount) 100.0 }}
+                            {{ if lt $h 2.0 }}{{ $h = 2.0 }}{{ end }}
+                        {{ end }}
+                        
+                        <div class="graph-bar" style="height: {{ $h }}%;" title="{{ $val }} Stars: {{ $c }}"></div>
+                    {{ end }}
+                </div>
+                <div class="graph-labels">
+                    <span style="margin-left: 2px;">1★</span>
+                    <span style="margin-right: 2px;">5★</span>
+                </div>
+            </div>
+
+            
+
+        </aside>
+
+        
+        <main class="main-content">
+            
+            
+            <div class="profile-tabs">
+                <a href="/" class="tab-item {{ if .IsHome }}active{{ end }}">Profile</a>
+                <a href="/games/" class="tab-item {{ if eq .Section "games" }}active{{ end }}">Games</a>
+                <a href="/reviews/" class="tab-item {{ if eq .Section "reviews" }}active{{ end }}">Reviews</a>
+            </div>
+
+            
+            {{ block "main" . }}{{ end }}
+            
+            
+        </main>
+    </div>
+</body>
+</html>

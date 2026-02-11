@@ -1,0 +1,58 @@
+{{ define "main" }}
+<div class="section-title-large">Reviews</div>
+
+<div class="recent-reviews-list">
+    
+    {{ $games := where site.RegularPages "Section" "games" }}
+    {{ $paginator := .Paginate $games }}
+    
+    {{ if eq (len $paginator.Pages) 0 }}
+        <div class="no-games-message">No games registered.</div>
+    {{ else }}
+        {{ range $paginator.Pages }}
+        <div class="review-card-row">
+            <a href="{{ .Permalink }}" class="review-cover-small">
+                <img src="{{ partial "get-cover.html" . }}" alt="{{ .Title }}">
+            </a>
+            <div class="review-content">
+                <div class="review-header">
+                    <a href="{{ .Permalink }}" class="game-title">{{ .Title }}</a>
+                    <span class="review-date">{{ .Date.Format "Jan 02, 2006" }}</span>
+                </div>
+                
+                <div class="review-meta-line">
+                    {{ partial "stars.html" .Params.rating }}
+                    <span class="status-dot"></span>
+                    <span style="color: var(--text-main);">{{ .Params.completion_status }}</span>
+                    <span>on {{ .Params.platform }}</span>
+                </div>
+
+                <div class="review-excerpt">
+                    {{ .Summary | truncate 300 }}
+                </div>
+                
+                <div style="margin-top: 10px; font-size: 0.85rem; color: var(--text-muted); display: flex; gap: 15px;">
+                    <a href="{{ .Permalink }}" style="color: var(--text-muted);">Open review</a>
+                </div>
+            </div>
+        </div>
+        {{ end }}
+    {{ end }}
+</div>
+
+
+{{ if gt $paginator.TotalPages 1 }}
+<div style="margin-top: 40px; display: flex; justify-content: center; gap: 10px;">
+    {{ if $paginator.HasPrev }}
+    <a href="{{ $paginator.Prev.URL }}" style="padding: 8px 16px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-color);">&larr; Previous</a>
+    {{ end }}
+    
+    <span style="padding: 8px 16px; color: var(--text-muted);">Page {{ $paginator.PageNumber }} of {{ $paginator.TotalPages }}</span>
+    
+    {{ if $paginator.HasNext }}
+    <a href="{{ $paginator.Next.URL }}" style="padding: 8px 16px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-color);">Next &rarr;</a>
+    {{ end }}
+</div>
+{{ end }}
+
+{{ end }}

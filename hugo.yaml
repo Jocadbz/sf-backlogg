@@ -1,0 +1,41 @@
+baseURL: "http://example.org/"
+languageCode: "en-us"
+title: "My Game Reviews"
+
+outputs:
+  home: ["HTML", "JSON"]
+
+params:
+  site_name: "Backloggd Clone" 
+  author: "Your Name"
+  bio: "This is a template. Write something about yourself here."
+  avatar: "https://ui-avatars.com/api/?name=User&background=random"
+  
+  colors:
+    background: "#161b22"
+    foreground: "#1f2428"
+    header: "#24292e"
+    text: "#c9d1d9"
+    text_muted: "#8b949e"
+    accent: "#f45d98"
+    accent_secondary: "#4a90e2"
+    border: "#30363d"
+  
+  socials: []
+
+  
+  favorites: []
+
+pagination:
+  pagerSize: 100 
+
+menu:
+  main:
+    - identifier: "games"
+      name: "Games"
+      url: "/games/"
+      weight: 10
+    - identifier: "reviews"
+      name: "Reviews"
+      url: "/reviews/"
+      weight: 30

@@ -1,0 +1,50 @@
+{{ define "main" }}
+<div class="section-title-large">Games</div>
+
+
+<div style="margin-bottom: 20px; display: flex; gap: 15px; font-size: 0.9rem; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; cursor: pointer;">
+    <span class="filter-tab" onclick="filterGames('All')" style="color: var(--text-main); border-bottom: 2px solid var(--accent-pink);">All</span>
+    <span class="filter-tab" onclick="filterGames('Playing')">Playing</span>
+    <span class="filter-tab" onclick="filterGames('Backlog')">Backlog</span>
+    <span class="filter-tab" onclick="filterGames('Wishlist')">Wishlist</span>
+    <span class="filter-tab" onclick="filterGames('Completed')">Completed</span>
+    <span class="filter-tab" onclick="filterGames('Shelved')">Shelved</span>
+</div>
+
+{{ if eq (len .Paginator.Pages) 0 }}
+    <div class="no-games-message">
+        No games registered.
+    </div>
+{{ else }}
+    <div class="games-grid" style="display: grid; grid-template-columns: repeat(auto-fill, 101px); gap: 10px; justify-content: start;">
+        {{ range .Paginator.Pages }}
+        <div class="game-grid-item" data-status="{{ .Params.completion_status }}" style="position: relative; width: 101px;">
+            <a href="{{ .Permalink }}" class="game-cover-card" style="display: block; width: 101px; height: 138px;">
+                <img src="{{ partial "get-cover.html" . }}" style="width: 100%; height: 100%; object-fit: cover;">
+                
+                
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.85); color: var(--accent-pink); text-align: center; font-size: 0.85rem; padding: 4px 0;">
+                    {{ partial "stars.html" .Params.rating }}
+                </div>
+            </a>
+        </div>
+        {{ end }}
+    </div>
+
+    
+    {{ if gt .Paginator.TotalPages 1 }}
+    <div style="margin-top: 40px; display: flex; justify-content: center; gap: 10px;">
+        {{ if .Paginator.HasPrev }}
+        <a href="{{ .Paginator.Prev.URL }}" style="padding: 8px 16px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-color);">&larr; Previous</a>
+        {{ end }}
+        
+        <span style="padding: 8px 16px; color: var(--text-muted);">Page {{ .Paginator.PageNumber }} of {{ .Paginator.TotalPages }}</span>
+        
+        {{ if .Paginator.HasNext }}
+        <a href="{{ .Paginator.Next.URL }}" style="padding: 8px 16px; background: var(--bg-card); border-radius: 4px; border: 1px solid var(--border-color);">Next &rarr;</a>
+        {{ end }}
+    </div>
+    {{ end }}
+{{ end }}
+
+{{ end }}

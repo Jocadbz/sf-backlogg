@@ -1,0 +1,12 @@
+{{ $rating := float . }}
+{{ $full := math.Floor $rating }}
+{{ $half := false }}
+{{ if ge (sub $rating $full) 0.5 }}
+    {{ $half = true }}
+{{ end }}
+{{ $empty := sub 5 (add $full (cond $half 1 0)) }}
+
+<span class="stars" style="color: var(--accent-pink); letter-spacing: 1px;">
+    {{ range seq $full }}★{{ end }}
+    {{ if $half }}½{{ end }}
+</span>
