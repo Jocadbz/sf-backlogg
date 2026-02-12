@@ -545,3 +545,124 @@ footer {
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
+
+
+@media (max-width: 768px) {
+    .top-nav > div {
+        gap: 10px;
+    }
+    .nav-brand {
+        margin-right: 15px;
+        font-size: 1rem;
+    }
+    .search-bar {
+        width: 140px;
+        font-size: 0.8rem;
+    }
+
+    .page-container {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        gap: 20px;
+    }
+
+    .sidebar {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 15px;
+        align-items: start;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+    }
+
+    .profile-card {
+        display: contents; 
+    }
+
+    .profile-avatar {
+        width: 80px;
+        margin-bottom: 0;
+    }
+
+    .bio-section, .ratings-graph-container {
+        grid-column: 1 / -1;
+        border-top: none;
+        padding-top: 0;
+    }
+    
+    .ratings-graph-container {
+        margin-top: 10px;
+    }
+    
+    .ratings-graph {
+        height: 50px; 
+    }
+    .graph-bar {
+        width: 8%; 
+        flex: 1;
+    }
+
+    .favorites-grid, .recently-played-grid {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+
+    .stats-banner {
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px 0;
+    }
+    .stat-item {
+        flex: 1 0 30%; 
+    }
+    .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .review-card-row {
+        gap: 15px;
+    }
+    .review-cover-small {
+        width: 70px;
+    }
+    
+    .single-review-container {
+        display: flex;
+        flex-direction: column;
+    }
+    .game-poster-large {
+        max-width: 200px; 
+        margin: 0 auto 20px auto; 
+        display: block;
+    }
+    
+    footer {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .favorites-grid, .recently-played-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .search-bar {
+        width: 100px;
+    }
+    
+    .review-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .review-metadata-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
