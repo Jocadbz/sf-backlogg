@@ -1,0 +1,42 @@
+{{ define "main" }}
+<div class="all-lists-page">
+    {{ if $.Site.Data.lists }}
+    <!-- Header row: count -->
+    <div class="all-lists-header">
+        <span class="subtitle-text">{{ len $.Site.Data.lists }} {{ if eq (len $.Site.Data.lists) 1 }}List{{ else }}Lists{{ end }}</span>
+    </div>
+
+    <!-- List cards -->
+    <div class="all-lists">
+        {{ range $.Site.Data.lists }}
+        <a href="/lists/{{ .slug }}/" class="list-card-horizontal">
+            <div class="list-covers-fan">
+                {{ $games := first 5 .games }}
+                {{ range $index, $slug := $games }}
+                    {{ $gamePage := site.GetPage (printf "/games/%s" $slug) }}
+                    {{ if $gamePage }}
+                        <div class="fan-cover" style="z-index: {{ sub 10 $index }};">
+                            <img src="{{ partial "get-cover.html" $gamePage }}" alt="{{ $gamePage.Title }}" loading="lazy">
+                        </div>
+                    {{ end }}
+                {{ end }}
+                {{ if eq (len .games) 0 }}
+                    <div class="fan-cover-empty">
+                        <span style="color: var(--text-muted);">Empty List</span>
+                    </div>
+                {{ end }}
+            </div>
+            <div class="list-card-meta">
+                <h3>{{ .title }}</h3>
+                <span class="subtitle-text">{{ len .games }} Games</span>
+            </div>
+        </a>
+        {{ end }}
+    </div>
+    {{ else }}
+    <div class="no-games-message">
+        No lists created yet.
+    </div>
+    {{ end }}
+</div>
+{{ end }}

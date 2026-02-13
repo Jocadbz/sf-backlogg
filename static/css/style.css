@@ -666,3 +666,282 @@ footer {
         gap: 10px;
     }
 }
+
+/* Lists Feature Styles */
+
+/* ---- All Lists Page ---- */
+
+.all-lists-page {
+    padding-top: 5px;
+}
+.all-lists-header {
+    margin-bottom: 15px;
+}
+
+.all-lists {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.list-card-horizontal {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+.list-card-horizontal:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Fan of overlapping covers */
+.list-covers-fan {
+    display: flex;
+    height: 160px;
+}
+
+.fan-cover {
+    flex: 0 0 auto;
+    width: 110px;
+    height: 160px;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.5);
+    margin-right: -20px;
+    transition: transform 0.2s ease;
+}
+.fan-cover:last-child {
+    margin-right: 0;
+}
+
+.fan-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.list-card-horizontal:hover .fan-cover {
+    transform: translateY(-3px);
+}
+
+.fan-cover-empty {
+    width: 110px;
+    height: 160px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.list-card-meta {
+    margin-top: 10px;
+}
+.list-card-meta h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+.list-card-meta .subtitle-text {
+    color: var(--accent-pink);
+    font-size: 0.85rem;
+}
+
+
+/* ---- Single List Page ---- */
+
+.subtitle-text {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.list-single-page {
+    padding-top: 5px;
+}
+
+.list-header {
+    margin-bottom: 10px;
+}
+.list-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 5px 0;
+}
+.list-description {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Two-column layout: game grid + sidebar */
+.list-layout {
+    display: grid;
+    grid-template-columns: 1fr 250px;
+    gap: 30px;
+    align-items: start;
+}
+
+.list-toolbar {
+    margin-bottom: 10px;
+}
+
+.list-separator {
+    height: 1px;
+    background: var(--border-color);
+    margin-bottom: 15px;
+}
+
+/* Game grid - 5 columns */
+.list-game-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+}
+
+.list-game-item {
+    display: block;
+    text-decoration: none;
+}
+.list-game-item:hover {
+    text-decoration: none;
+}
+
+.list-game-cover {
+    aspect-ratio: 2/3;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+}
+.list-game-cover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.list-game-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Sidebar */
+.list-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.list-sidebar-username {
+    font-weight: 600;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.list-stats-box {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 15px;
+}
+
+.list-stats-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.list-stats-label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.list-stats-value {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+.list-stats-value strong {
+    color: var(--text-main);
+}
+
+/* Circular progress indicator */
+.progress-circle {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    flex-shrink: 0;
+}
+.progress-circle svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+.progress-circle path {
+    transition: stroke-dashoffset 1s ease-out;
+}
+.progress-circle-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: var(--text-main);
+}
+
+.list-sidebar-updated {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.avatar-small {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.avatar-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* ---- Responsive ---- */
+
+@media (max-width: 768px) {
+    .list-layout {
+        grid-template-columns: 1fr;
+    }
+    .list-game-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .list-sidebar {
+        border-top: 1px solid var(--border-color);
+        padding-top: 20px;
+    }
+    .fan-cover {
+        width: 80px;
+        height: 120px;
+        margin-right: -15px;
+    }
+    .list-covers-fan {
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .list-game-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

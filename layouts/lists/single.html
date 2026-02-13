@@ -1,0 +1,117 @@
+{{ define "main" }}
+
+{{ $currentSlug := .Params.slug }}
+{{ $listData := "" }}
+{{ range $.Site.Data.lists }}
+    {{ if eq .slug $currentSlug }}
+        {{ $listData = . }}
+    {{ end }}
+{{ end }}
+
+{{ if $listData }}
+<div class="list-single-page">
+    <!-- Header -->
+    <div class="list-header">
+        <h1 class="list-title">{{ $listData.title }}</h1>
+        {{ with $listData.description }}
+            <p class="list-description">{{ . }}</p>
+        {{ end }}
+    </div>
+
+    <!-- Two-column layout: games left, sidebar right -->
+    <div class="list-layout">
+        <!-- Main Content (Game Grid) -->
+        <div class="list-main">
+            <div class="list-toolbar">
+                <span class="subtitle-text">{{ len $listData.games }} Games</span>
+            </div>
+
+            <div class="list-separator"></div>
+
+            <!-- Grid -->
+            <div class="list-game-grid">
+                {{ range $listData.games }}
+                    {{ $game := site.GetPage (printf "/games/%s" .) }}
+                    {{ if $game }}
+                        <a href="{{ $game.Permalink }}" class="list-game-item">
+                            <div class="list-game-cover">
+                                <img src="{{ partial "get-cover.html" $game }}" alt="{{ $game.Title }}" loading="lazy">
+                            </div>
+                        </a>
+                    {{ end }}
+                {{ end }}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="list-sidebar">
+            <!-- User Profile -->
+            <div class="list-sidebar-user">
+                <div class="avatar-small">
+                    <img src="{{ .Site.Params.avatar }}" alt="{{ .Site.Params.author }}">
+                </div>
+                <span class="list-sidebar-username">{{ .Site.Params.author }}</span>
+            </div>
+
+            <!-- Calculation Logic -->
+            {{ $stats := newScratch }}
+            {{ $stats.Set "total" 0 }}
+            {{ $stats.Set "played_count" 0 }}
+
+            {{ range $listData.games }}
+                {{ $game := site.GetPage (printf "/games/%s" .) }}
+                {{ if $game }}
+                    {{ $stats.Add "total" 1 }}
+                    {{ $s := $game.Params.completion_status }}
+                    {{ if $s }}
+                        {{ $stats.Add $s 1 }}
+                    {{ end }}
+                    {{ if or (eq $s "Completed") (eq $s "Playing") }}
+                        {{ $stats.Add "played_count" 1 }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+
+            {{ $total := $stats.Get "total" }}
+            {{ $played := $stats.Get "played_count" }}
+            {{ $percentage := 0 }}
+            {{ if gt $total 0 }}
+                {{ $percentage = mul (div (float $played) (float $total)) 100 }}
+            {{ end }}
+
+            <!-- Progress Box -->
+            <div class="list-stats-box">
+                <div class="list-stats-row">
+                    <div>
+                        <div class="list-stats-label">You've played</div>
+                        <div class="list-stats-value">
+                            <strong>{{ $played }}</strong> / {{ $total }} games
+                        </div>
+                    </div>
+                    <!-- Circular Progress -->
+                    <div class="progress-circle">
+                        <svg viewBox="0 0 100 100">
+                            <path d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke="#30363d" stroke-width="8" fill-opacity="0"></path>
+                            <path d="M 50,50 m 0,-47 a 47,47 0 1 1 0,94 a 47,47 0 1 1 0,-94" stroke="var(--accent-pink)" stroke-width="8" fill-opacity="0"
+                                  style="stroke-dasharray: 295.35px; stroke-dashoffset: {{ sub 295.35 (mul 2.9535 $percentage) }}px;"></path>
+                        </svg>
+                        <div class="progress-circle-text">{{ printf "%.0f" $percentage }}%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Last Updated -->
+            <div class="list-sidebar-updated">
+                <span>Last updated:</span>
+                <span>{{ now.Format "Jan 2, 2006" }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{{ else }}
+<div style="padding: 40px 0;">
+    <h1>List Not Found</h1>
+</div>
+{{ end }}
+
+{{ end }}
